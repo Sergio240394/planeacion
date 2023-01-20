@@ -97,18 +97,35 @@ public class correo extends HttpServlet {
             prop.setProperty("mail.pop3.socketFactory.port", "995");
             Session sesion = Session.getInstance(prop);
             sesion.setDebug(true);
-            try {
-            Store store = sesion.getStore("pop3");
-            store.connect("mail.office365.com", usuario, password);
-            store.close();
+     
+          //  try {
+            //Store store = sesion.getStore("pop3");
+           // store.connect("mail.office365.com", usuario, password);
+         //   store.close();
             login = "conectado";
-            } catch (AuthenticationFailedException e) {
-                login = "-101";
-        } catch (NoSuchProviderException e) {
-                login = "-102";
-        } catch (MessagingException e) {
-                login = "-103";
+     
+          try {
+                   OkHttpClient client = new OkHttpClient().newBuilder()
+                  .build();
+                      Request request = new Request.Builder()
+                        .url("https://login.microsoftonline.com/50640584-2a40-4216-a84b-9b3ee0f3f6cf/oauth2/v2.0/token")
+                        .method("GET", null)
+                        .addHeader("Content-Type", "application/x-www-form-urlencoded")
+                        .addHeader("Cookie", "fpc=AucaHn-V50tKl7QPQYVkChNh_mJTAQAAAJhuWdsOAAAA; stsservicecookie=estsfd; x-ms-gateway-slice=estsfd")
+                        .build();
+                        Response response = client.newCall(request).execute();
+                System.out.println(response.body().string());
+           } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
+       
+          //  } catch (AuthenticationFailedException e) {
+         //       login = "-101";
+       // } catch (NoSuchProviderException e) {
+      //          login = "-102";
+        //} catch (MessagingException e) {
+          //      login = "-103";
+        /}
 
         return login;
 
